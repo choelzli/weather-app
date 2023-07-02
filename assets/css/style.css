@@ -1,0 +1,10 @@
+.hidden{
+    display:none;
+}
+
+button {
+    background-color: #4e687b;
+    border-radius: 25px;
+    color: white;
+    margin: 2px;
+}
