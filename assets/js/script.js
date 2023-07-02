@@ -53,8 +53,12 @@ function renderCurrentWeather(data) {
       name: $('#city').val()
     };
     cities.push(city);
+    localStorage.clear();
+    saveCity(cities);
   }
-
+  
+  renderStorage();
+  
   let today = dayjs();
   $('#today').text(today.format('ddd, MM/DD/YYYY'));
   $('#currentTemp').text("Temp: " + Math.floor(data.main.temp) + " °F");
@@ -84,7 +88,38 @@ function renderForecast(forecast) {
   }
 }
 
+function renderStorage() {
+    $('#history').remove();
+    let stored = getLocal();
+  
+    const saveHistory = $('#saveHistory');
+    const history = $('<div>');
+    history.attr('id', 'history');
+    saveHistory.append(history);
+  
+    for (let i = 0; i < stored.length; i++) {
+      const cityHistory = $('<button>');
+      cityHistory.text(stored[i].name).val(stored[i].name).addClass('direct customB btn-outline-success');
+      history.append(cityHistory);
+    }
+  }
+  
+  function getLocal() {
+    let stored = localStorage.getItem('history');
+    if (stored) {
+      return JSON.parse(stored);
+    } else {
+      return [];
+    }
+  }
+  
+  function saveCity(cities) {
+    localStorage.setItem('history', JSON.stringify(cities));
+  }
+
 $(document).ready(function () {
+    cities = getLocal();
+    renderStorage();
     $('#searchBtn').on('click', searchCity);
     $('#history').on('click', '.direct', function () {
       sendCity($(this).val());
